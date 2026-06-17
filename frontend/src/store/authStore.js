@@ -14,10 +14,16 @@ export const useAuthStore = create((set) => ({
 
   /** Hydrate the session on app load. */
   init: async () => {
+    const token = localStorage.getItem('clearlease_token');
+    if (!token) {
+      set({ user: null, isAuthenticated: false, loading: false });
+      return;
+    }
     try {
       const { user } = await authService.me();
       set({ user, isAuthenticated: true, loading: false });
     } catch {
+      localStorage.removeItem('clearlease_token');
       set({ user: null, isAuthenticated: false, loading: false });
     }
   },
@@ -25,7 +31,10 @@ export const useAuthStore = create((set) => ({
   register: async (payload) => {
     set({ error: null });
     try {
-      const { user } = await authService.register(payload);
+      const { user, token } = await authService.register(payload);
+      if (token) {
+        localStorage.setItem('clearlease_token', token);
+      }
       set({ user, isAuthenticated: true });
       return { ok: true };
     } catch (error) {
@@ -38,7 +47,10 @@ export const useAuthStore = create((set) => ({
   login: async (payload) => {
     set({ error: null });
     try {
-      const { user } = await authService.login(payload);
+      const { user, token } = await authService.login(payload);
+      if (token) {
+        localStorage.setItem('clearlease_token', token);
+      }
       set({ user, isAuthenticated: true });
       return { ok: true };
     } catch (error) {
@@ -52,6 +64,7 @@ export const useAuthStore = create((set) => ({
     try {
       await authService.logout();
     } finally {
+      localStorage.removeItem('clearlease_token');
       set({ user: null, isAuthenticated: false });
     }
   },
