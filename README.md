@@ -10,7 +10,7 @@ AI-powered lease risk analysis — surfaces hidden fees, unfair clauses, and lan
 [![Google Gemini](https://img.shields.io/badge/AI-Google%20Gemini-4285F4?style=flat-square&logo=google)](https://ai.google.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
-**🌐 Live Demo:** _[Coming Soon](#)_
+**🌐 Live Demo:** [https://clear-lease-delta.vercel.app/](https://clear-lease-delta.vercel.app/)
 
 </div>
 
