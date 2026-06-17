@@ -112,7 +112,6 @@ export const buildLeaseReport = (lease) => {
     counts[lvl] = (counts[lvl] || 0) + 1;
   }
 
-  // ---- Cover ----
   doc
     .fillColor(COLORS.brand)
     .fontSize(26)
@@ -163,7 +162,6 @@ export const buildLeaseReport = (lease) => {
         `${counts.HIGH} high · ${counts.MEDIUM} medium · ${counts.LOW} low`
     );
 
-  // ---- Executive summary ----
   sectionTitle(doc, 'Executive Summary');
   doc
     .fontSize(10)
@@ -175,7 +173,6 @@ export const buildLeaseReport = (lease) => {
         `The sections below break down each issue by severity, with plain-English explanations and negotiation guidance.`
     );
 
-  // ---- Risk breakdown ----
   sectionTitle(doc, 'Risk Breakdown');
   doc.fontSize(10).font('Helvetica');
   [
@@ -192,7 +189,6 @@ export const buildLeaseReport = (lease) => {
       .text(`${n} clause${n === 1 ? '' : 's'}`);
   });
 
-  // ---- Clause sections by severity ----
   const byLevel = (lvl) =>
     results.filter((r) => (r.riskLevel || 'LOW').toUpperCase() === lvl);
 
@@ -216,7 +212,6 @@ export const buildLeaseReport = (lease) => {
       .text('No risky clauses were detected. Always read the full lease carefully.');
   }
 
-  // ---- Negotiation recommendations ----
   const withRecs = results.filter((r) => r.recommendation);
   if (withRecs.length) {
     sectionTitle(doc, 'Negotiation Recommendations');
@@ -233,7 +228,6 @@ export const buildLeaseReport = (lease) => {
     });
   }
 
-  // ---- Final verdict ----
   sectionTitle(doc, 'Final Verdict');
   doc
     .fontSize(11)
@@ -241,7 +235,6 @@ export const buildLeaseReport = (lease) => {
     .fillColor(scoreColor(score))
     .text(verdict(lease));
 
-  // ---- Disclaimer footer ----
   doc.moveDown(2);
   doc
     .fontSize(8)

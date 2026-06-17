@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { API_URL } from './constants.js';
 
 /**
  * Merge conditional class names with Tailwind conflict resolution.
@@ -34,6 +35,13 @@ export const formatFileSize = (bytes) => {
 export const fileUrl = (relativeUrl) => {
   if (!relativeUrl) return '';
   if (/^https?:\/\//.test(relativeUrl)) return relativeUrl;
+
+  // In production, when API_URL is a full URL, point back to the backend domain
+  if (API_URL && API_URL.startsWith('http')) {
+    const baseUrl = API_URL.replace(/\/api\/?$/, '');
+    return `${baseUrl}${relativeUrl}`;
+  }
+
   return relativeUrl; // served via Vite proxy / same origin
 };
 

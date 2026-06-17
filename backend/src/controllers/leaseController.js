@@ -27,7 +27,6 @@ export const uploadLease = asyncHandler(async (req, res) => {
 
   let extractedText;
   try {
-    // Step 1-2: extract text from the PDF.
     const { text } = await extractTextFromPdf(filePath);
     extractedText = text;
   } catch (err) {
@@ -36,7 +35,6 @@ export const uploadLease = asyncHandler(async (req, res) => {
     throw new Error(err.message || 'Failed to read PDF');
   }
 
-  // Step 4-5: AI analysis.
   let analysisResults;
   try {
     analysisResults = await analyzeLease(extractedText);
@@ -46,11 +44,9 @@ export const uploadLease = asyncHandler(async (req, res) => {
     throw new Error(err.message || 'AI analysis failed. Please try again.');
   }
 
-  // Step (scoring): compute risk.
   const { overallRiskScore, riskLabel, totalFlags } =
     computeRiskScore(analysisResults);
 
-  // Step 6: persist.
   const lease = await LeaseDocument.create({
     user: req.user._id,
     originalFileName: req.file.originalname,
@@ -62,7 +58,6 @@ export const uploadLease = asyncHandler(async (req, res) => {
     analysisResults,
   });
 
-  // Step 7: respond.
   res.status(201).json({ success: true, lease });
 });
 
@@ -101,14 +96,12 @@ export const getDashboardStats = asyncHandler(async (req, res) => {
     .select('originalFileName overallRiskScore createdAt analysisResults')
     .sort({ createdAt: 1 });
 
-  // Risk trend over time (oldest → newest).
   const riskTrend = leases.map((l) => ({
     date: l.createdAt,
     score: l.overallRiskScore,
     name: l.originalFileName,
   }));
 
-  // Tally categories across every flagged clause.
   const tally = Object.fromEntries(CATEGORY_RULES.map((c) => [c.key, 0]));
   for (const lease of leases) {
     for (const clause of lease.analysisResults || []) {
@@ -195,10 +188,33 @@ export const generateLetter = asyncHandler(async (req, res) => {
     throw new Error('Not authorized to access this lease');
   }
 
-  const clause = lease.analysisResults[clauseIndex];
-  if (!clause) {
-    res.status(400);
-    throw new Error('Clause not found for the provided index');
+  let clause;
+  if (clauseIndex === undefined || clauseIndex === null || Number(clauseIndex) === -1) {
+    const highAndMed = (lease.analysisResults || []).filter(
+      (r) => (r.riskLevel || '').toUpperCase() === 'HIGH' || (r.riskLevel || '').toUpperCase() === 'MEDIUM'
+    );
+    const targetList = highAndMed.length > 0 ? highAndMed : (lease.analysisResults || []);
+
+    if (!targetList.length) {
+      res.status(400);
+      throw new Error('No flagged clauses found to negotiate');
+    }
+
+    clause = {
+      quote: targetList.map((c) => `- [Page ${c.pageNumber || 1}]: "${c.quote}"`).join('\n'),
+      translation: targetList.map((c) => `- Concern: ${c.translation}`).join('\n'),
+      recommendation: targetList
+        .filter((c) => c.recommendation)
+        .map((c) => `- Recommendation: ${c.recommendation}`)
+        .join('\n'),
+      isCombined: true,
+    };
+  } else {
+    clause = lease.analysisResults[clauseIndex];
+    if (!clause) {
+      res.status(400);
+      throw new Error('Clause not found for the provided index');
+    }
   }
 
   const letter = await generateNegotiationLetter(lease, clause, tone);

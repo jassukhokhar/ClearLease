@@ -108,7 +108,6 @@ const Dashboard = () => {
             </p>
           </div>
 
-          {/* ===== Top: Upload card ===== */}
           <section id="upload" className="mb-10">
             <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm sm:p-8">
               <div className="mb-5 flex items-center justify-between">
@@ -167,7 +166,6 @@ const Dashboard = () => {
             </div>
           </section>
 
-          {/* ===== Middle: Recent analyses ===== */}
           <section className="mb-10">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
@@ -190,7 +188,6 @@ const Dashboard = () => {
             />
           </section>
 
-          {/* ===== Bottom: Analytics cards ===== */}
           <section>
             <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">
               Your stats
@@ -223,13 +220,11 @@ const Dashboard = () => {
             </div>
           </section>
 
-          {/* ===== Insights: trend + categories ===== */}
           <section className="mt-10 grid gap-5 lg:grid-cols-2">
             <RiskTrendGraph data={stats.riskTrend} />
             <CommonRiskCategories categories={stats.categories} />
           </section>
 
-          {/* ===== Activity: conversations + comparisons ===== */}
           <section className="mt-5 grid gap-5 lg:grid-cols-2">
             <RecentConversations items={conversations} />
             <ComparisonHistory items={comparisons} />

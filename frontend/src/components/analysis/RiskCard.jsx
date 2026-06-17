@@ -87,7 +87,6 @@ const RiskCard = ({ result, index = 0, clauseIndex, onJump, onNegotiate }) => {
         </div>
       )}
 
-      {/* Actions */}
       {onNegotiate && (
         <div className="mt-4 flex justify-end">
           <button

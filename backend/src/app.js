@@ -18,7 +18,6 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// --- Security & core middleware ---
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' }, // allow PDF embeds
@@ -40,7 +39,6 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
 
-// --- Rate limiting ---
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 200,
@@ -62,21 +60,17 @@ const authLimiter = rateLimit({
 
 app.use('/api', apiLimiter);
 
-// --- Static: serve uploaded PDFs ---
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
-// --- Health check ---
 app.get('/api/health', (req, res) =>
   res.json({ success: true, status: 'ok', service: 'ClearLease API' })
 );
 
-// --- Routes ---
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/leases', leaseRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/comparisons', comparisonRoutes);
 
-// --- 404 + error handling ---
 app.use(notFound);
 app.use(errorHandler);
 

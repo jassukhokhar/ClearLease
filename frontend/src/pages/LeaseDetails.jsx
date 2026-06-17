@@ -28,19 +28,15 @@ const LeaseDetails = () => {
   const { current, loadingLease, error, fetchLease, clearCurrent } =
     useLeaseStore();
 
-  // PDF highlight target (set when a clause card is clicked).
   const [highlight, setHighlight] = useState(null);
   const [nonce, setNonce] = useState(0);
 
-  // Mobile/tablet chat slide-over.
   const [chatOpen, setChatOpen] = useState(false);
 
-  // Negotiation modal.
   const [negotiation, setNegotiation] = useState(null);
 
-  // Export state + toast.
   const [exporting, setExporting] = useState(false);
-  const [toast, setToast] = useState(null); // { message, tone }
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     fetchLease(id);
@@ -73,7 +69,6 @@ const LeaseDetails = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-900">
-      {/* Slim top bar (global chrome is hidden on this route) */}
       <header className="sticky top-0 z-30 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
         <Container className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-4">
@@ -99,15 +94,25 @@ const LeaseDetails = () => {
               </p>
             )}
             {current && (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={handleExport}
-                loading={exporting}
-              >
-                <Download className="h-4 w-4" />
-                <span className="hidden sm:inline">Export Report</span>
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setNegotiation({ isCombined: true, clauseIndex: -1 })}
+                >
+                  <Sparkles className="h-4 w-4 text-brand-600 dark:text-brand-400" />
+                  <span>Negotiation Letter</span>
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleExport}
+                  loading={exporting}
+                >
+                  <Download className="h-4 w-4" />
+                  <span className="hidden sm:inline">Export Report</span>
+                </Button>
+              </div>
             )}
           </div>
         </Container>
@@ -132,10 +137,7 @@ const LeaseDetails = () => {
 
         {!loadingLease && current && (
           <Container className="py-6">
-            {/* PDF | analysis | chat. Chat is its own column on xl+, a
-                slide-over below that. */}
             <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-12">
-              {/* Left — PDF viewer (sticky on desktop) */}
               <div className="lg:sticky lg:top-[5.5rem] lg:h-[calc(100vh-7rem)] xl:col-span-5">
                 <PdfViewer
                   fileUrl={fileUrl(current.fileUrl)}
@@ -144,7 +146,6 @@ const LeaseDetails = () => {
                 />
               </div>
 
-              {/* Middle — analysis */}
               <div className="xl:col-span-4">
                 <AnalysisPanel
                   lease={current}
@@ -153,7 +154,6 @@ const LeaseDetails = () => {
                 />
               </div>
 
-              {/* Right — chat (xl+ only) */}
               <div className="hidden xl:col-span-3 xl:block">
                 <div className="sticky top-[5.5rem] h-[calc(100vh-7rem)]">
                   <ChatPanel leaseId={id} />
@@ -164,7 +164,6 @@ const LeaseDetails = () => {
         )}
       </div>
 
-      {/* Floating "Ask AI" button — below xl, where chat is a slide-over */}
       {current && (
         <button
           onClick={() => setChatOpen(true)}
@@ -174,7 +173,6 @@ const LeaseDetails = () => {
         </button>
       )}
 
-      {/* Chat slide-over (below xl) */}
       <AnimatePresence>
         {chatOpen && (
           <motion.div
@@ -211,7 +209,6 @@ const LeaseDetails = () => {
         )}
       </AnimatePresence>
 
-      {/* Negotiation letter generator */}
       <NegotiationModal
         open={!!negotiation}
         onClose={() => setNegotiation(null)}

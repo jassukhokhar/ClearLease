@@ -34,7 +34,6 @@ const Navbar = () => {
       <Container className="flex h-16 items-center justify-between">
         <Logo />
 
-        {/* Desktop nav */}
         <nav className="hidden items-center gap-1 md:flex">
           {isAuthenticated ? (
             <>
@@ -63,7 +62,6 @@ const Navbar = () => {
           )}
         </nav>
 
-        {/* Mobile actions */}
         <div className="flex items-center gap-1 md:hidden">
           <ThemeToggle />
           <button
@@ -76,7 +74,6 @@ const Navbar = () => {
         </div>
       </Container>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {open && (
           <motion.div

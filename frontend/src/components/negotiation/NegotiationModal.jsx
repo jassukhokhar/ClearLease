@@ -6,19 +6,15 @@ import { leaseService } from '../../services/leaseService.js';
 import { NEGOTIATION_TONES } from '../../utils/constants.js';
 import { cn, getErrorMessage } from '../../utils/helpers.js';
 
-/**
- * Generates an AI negotiation letter for a single clause. Tone selector,
- * copy / download / regenerate actions.
- */
 const NegotiationModal = ({ open, onClose, leaseId, clause }) => {
   const [tone, setTone] = useState('email');
   const [loading, setLoading] = useState(false);
-  const [letter, setLetter] = useState(null); // { subject, body }
+  const [letter, setLetter] = useState(null);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
 
   const generate = async (selectedTone) => {
-    if (clause?.clauseIndex == null || clause.clauseIndex < 0) {
+    if (clause?.clauseIndex == null || clause.clauseIndex < -1) {
       setError('This clause could not be located. Please reopen and retry.');
       return;
     }
@@ -38,13 +34,11 @@ const NegotiationModal = ({ open, onClose, leaseId, clause }) => {
     }
   };
 
-  // Generate on open / when tone changes.
   useEffect(() => {
     if (open && clause) generate(tone);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, tone]);
 
-  // Reset transient state when closed.
   useEffect(() => {
     if (!open) {
       setLetter(null);
@@ -80,10 +74,9 @@ const NegotiationModal = ({ open, onClose, leaseId, clause }) => {
       open={open}
       onClose={onClose}
       title="Negotiation Letter"
-      description="AI-drafted message to negotiate this clause. Review and edit before sending."
+      description="AI-drafted message to negotiate this lease. Review and edit before sending."
       className="max-w-2xl"
     >
-      {/* Tone selector */}
       <div className="mb-4 flex flex-wrap gap-2">
         {NEGOTIATION_TONES.map((t) => (
           <button
@@ -103,8 +96,7 @@ const NegotiationModal = ({ open, onClose, leaseId, clause }) => {
         ))}
       </div>
 
-      {/* Body */}
-      <div className="min-h-[16rem] rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 p-4">
+      <div className="min-h-[16rem] max-h-[380px] overflow-y-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 p-4">
         {loading && (
           <div className="flex h-56 flex-col items-center justify-center text-slate-400 dark:text-slate-500">
             <Loader2 className="h-6 w-6 animate-spin text-brand-600" />
@@ -121,6 +113,29 @@ const NegotiationModal = ({ open, onClose, leaseId, clause }) => {
 
         {!loading && letter && (
           <div className="space-y-3">
+            <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-700 pb-2 mb-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">
+                {clause?.isCombined ? 'Lease-wide Letter' : 'Clause Negotiation'}
+              </span>
+              <div className="flex gap-2">
+                <button
+                  onClick={copy}
+                  className="inline-flex items-center gap-1 rounded bg-white dark:bg-slate-900 px-2.5 py-1 text-xs border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm"
+                  title="Copy to Clipboard"
+                >
+                  {copied ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+                  {copied ? 'Copied!' : 'Copy'}
+                </button>
+                <button
+                  onClick={download}
+                  className="inline-flex items-center gap-1 rounded bg-white dark:bg-slate-900 px-2.5 py-1 text-xs border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm"
+                  title="Download Text File"
+                >
+                  <Download className="h-3 w-3" />
+                  Download
+                </button>
+              </div>
+            </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
                 Subject
@@ -141,7 +156,6 @@ const NegotiationModal = ({ open, onClose, leaseId, clause }) => {
         )}
       </div>
 
-      {/* Actions */}
       <div className="mt-5 flex flex-wrap justify-end gap-3">
         <Button
           variant="ghost"

@@ -37,24 +37,30 @@ const parseLetter = (raw) => {
   };
 };
 
-const buildPrompt = (lease, clause, tone) => `You are helping a tenant negotiate a clause in their residential lease.
+const buildPrompt = (lease, clause, tone) => {
+  const isCombined = !!clause.isCombined;
+  const targetLabel = isCombined ? 'FLAGGED CLAUSES IN QUESTION' : 'CLAUSE IN QUESTION';
+  const issueHeading = isCombined ? 'WHY THEY MATTER FOR THE TENANT' : 'WHY IT MATTERS FOR THE TENANT';
 
-Write ${TONES[tone]} addressed to the landlord requesting a change or clarification to the clause below. Be specific, reference the concern in plain language, propose a reasonable alternative, and keep it respectful. Do NOT claim to provide legal advice.
+  return `You are helping a tenant negotiate terms in their residential lease.
+
+Write ${TONES[tone]} addressed to the landlord requesting changes, removal, or clarification for the ${isCombined ? 'flagged clauses' : 'clause'} listed below. Be specific, reference each concern in plain language, propose reasonable alternatives, and keep it respectful. Do NOT claim to provide legal advice.
 
 LEASE: ${lease.originalFileName}
 
-CLAUSE IN QUESTION:
-"${clause.quote}"
+${targetLabel}:
+${clause.quote}
 
-WHY IT MATTERS FOR THE TENANT:
+${issueHeading}:
 ${clause.translation}
-${clause.recommendation ? `SUGGESTED DIRECTION: ${clause.recommendation}` : ''}
+${clause.recommendation ? `\nSUGGESTED DIRECTION:\n${clause.recommendation}` : ''}
 
 Return ONLY valid JSON, no markdown, in exactly this shape:
 {
   "subject": "a short subject line",
   "body": "the full letter/email body, with greeting and sign-off as 'Sincerely, [Your Name]'"
 }`;
+};
 
 /**
  * Generate a negotiation letter for a single clause.

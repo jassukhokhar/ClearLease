@@ -47,7 +47,6 @@ const ChatPanel = ({ leaseId, className = '' }) => {
     <div
       className={`flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 ${className}`}
     >
-      {/* Header */}
       <div className="flex items-center gap-2.5 border-b border-slate-200 dark:border-slate-800 px-4 py-3">
         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white">
           <Sparkles className="h-4 w-4" />
@@ -60,7 +59,6 @@ const ChatPanel = ({ leaseId, className = '' }) => {
         </div>
       </div>
 
-      {/* Messages */}
       <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto p-4">
         {loading && (
           <div className="flex h-full items-center justify-center">
@@ -106,7 +104,6 @@ const ChatPanel = ({ leaseId, className = '' }) => {
         )}
       </div>
 
-      {/* Suggested questions */}
       {!loading && messages.length === 0 && (
         <div className="flex flex-wrap gap-2 border-t border-slate-100 dark:border-slate-800 px-4 py-3">
           {SUGGESTED_QUESTIONS.slice(0, 4).map((q) => (

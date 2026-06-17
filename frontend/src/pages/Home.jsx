@@ -34,7 +34,6 @@ const Home = () => {
 
   return (
     <div id="top" className="overflow-hidden">
-      {/* ===== Hero ===== */}
       <section className="relative">
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-brand-50/70 via-white to-white dark:from-brand-950/30 dark:via-slate-950 dark:to-slate-950" />
         <Container className="py-20 sm:py-28">
@@ -127,7 +126,6 @@ const Home = () => {
         </Container>
       </section>
 
-      {/* ===== Features ===== */}
       <section id="features" className="py-20">
         <Container>
           <motion.div {...fadeUp} className="mx-auto max-w-2xl text-center">
@@ -194,7 +192,6 @@ const Home = () => {
         </Container>
       </section>
 
-      {/* ===== How it works ===== */}
       <section id="how" className="bg-slate-50 py-20 dark:bg-slate-900">
         <Container>
           <motion.div {...fadeUp} className="mx-auto max-w-2xl text-center">
@@ -243,7 +240,6 @@ const Home = () => {
         </Container>
       </section>
 
-      {/* ===== Testimonials ===== */}
       <section id="testimonials" className="py-20">
         <Container>
           <motion.div {...fadeUp} className="mx-auto max-w-2xl text-center">
@@ -298,7 +294,6 @@ const Home = () => {
         </Container>
       </section>
 
-      {/* ===== Pricing placeholder ===== */}
       <section id="pricing" className="bg-slate-50 py-20 dark:bg-slate-900">
         <Container>
           <motion.div {...fadeUp} className="mx-auto max-w-2xl text-center">
@@ -363,7 +358,6 @@ const Home = () => {
         </Container>
       </section>
 
-      {/* ===== FAQ ===== */}
       <section id="faq" className="py-20">
         <Container>
           <motion.div {...fadeUp} className="mx-auto max-w-2xl text-center">
@@ -407,7 +401,6 @@ const Home = () => {
         </Container>
       </section>
 
-      {/* ===== Final CTA ===== */}
       <section className="pb-24">
         <Container>
           <div className="overflow-hidden rounded-3xl bg-brand-600 px-8 py-16 text-center shadow-card dark:bg-brand-700">
