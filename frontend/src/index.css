@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    @apply bg-white text-slate-900 font-sans antialiased transition-colors duration-200 dark:bg-slate-950 dark:text-slate-100;
+  }
+  * {
+    @apply border-slate-200 dark:border-slate-800;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+}
+
+/* Custom scrollbar — subtle, SaaS feel */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 9999px;
+  border: 2px solid #fff;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-color: #0f172a;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Smooth in-page anchor scrolling, offset for the sticky navbar. */
+html {
+  scroll-behavior: smooth;
+}
+:target {
+  scroll-margin-top: 5rem;
+}
+[id] {
+  scroll-margin-top: 5rem;
+}
+
+/* Skeleton shimmer */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
